@@ -27,6 +27,40 @@ class PlgContentLinkprotect extends JPlugin{
 
 		// $this->params ดึงมาจากไฟล์ linkprotect.xml ตามที่ extends JPlugin
 		$helper = new LinkProtectHelper($this->params);
+		$this->callbackFunction = array($helper, 'replaceLinks');
+	}
+
+	/**
+	* ดัก Event ก่อน Content แสดง
+	* $context = context of content pass to plugin
+	* $article = article object
+	* $params  = article params
+	*
+	* @return Boolean
+	*/
+	public function onContentBeforeDisplay($context ,$article, $params){
+		$parts = explode(".", $context);
+		if($parts[0] != "com_content"){
+			return;
+		}
+
+		if(stripos($article=>text, '{linkprotect=off}') === true ){
+			$article->text = str_ireplace('{linkprotect=off}', '', $article->text);
+		}
+
+		$app = JFactory::getApplication();
+		$external = $app->input->get('external', NULL);
+
+		if ($external) {
+			LinkProtectHelper::leaveSite($article, $external);
+		}else{
+			$pattern = '@href=("|\')(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)("|\')@';
+			$article->text = preg_replace_callback($pattern, $this->callbackFunction, $article->text,);
+		}
+
+
+
+
 	}
 
 
