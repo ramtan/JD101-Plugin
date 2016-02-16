@@ -44,7 +44,7 @@ class PlgContentLinkprotect extends JPlugin{
 			return;
 		}
 
-		if(stripos($article=>text, '{linkprotect=off}') === true ){
+		if(stripos($article->text, '{linkprotect=off}') === true ){
 			$article->text = str_ireplace('{linkprotect=off}', '', $article->text);
 		}
 
@@ -55,7 +55,7 @@ class PlgContentLinkprotect extends JPlugin{
 			NonHelper::leaveSite($article, $external);
 		}else{
 			$pattern = '@href=("|\')(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)("|\')@';
-			$article->text = preg_replace_callback($pattern, $this->callbackFunction, $article->text,);
+			$article->text = preg_replace_callback($pattern, $this->callbackFunction, $article->text);
 		}
 
 
