@@ -26,7 +26,7 @@ class PlgContentLinkprotect extends JPlugin{
 		require_once __DIR__ . '/helpers/helpers.php';
 
 		// $this->params ดึงมาจากไฟล์ linkprotect.xml ตามที่ extends JPlugin
-		$helper = new LinkProtectHelper($this->params);
+		$helper = new NonHelper($this->params);
 		$this->callbackFunction = array($helper, 'replaceLinks');
 	}
 
@@ -52,7 +52,7 @@ class PlgContentLinkprotect extends JPlugin{
 		$external = $app->input->get('external', NULL);
 
 		if ($external) {
-			LinkProtectHelper::leaveSite($article, $external);
+			NonHelper::leaveSite($article, $external);
 		}else{
 			$pattern = '@href=("|\')(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)("|\')@';
 			$article->text = preg_replace_callback($pattern, $this->callbackFunction, $article->text,);
